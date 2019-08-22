@@ -1,67 +1,62 @@
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.utils import to_categorical
 from keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from keras.layers import Dropout
+
+from keras.models import load_model
+from sklearn.preprocessing import StandardScaler
 
 # fix random seed for reproducibility
-
-numpy.random.seed(7)
+seed = 7
+np.random.seed(seed)
 
 # load  dataset
-
-dataset = pd.read_csv('input_data.csv', sep='\t', encoding='utf-8',index_col=0)
-
+dataset = pd.read_csv('/home_l/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8' ,index_col=0)
 
 # split into input (X) and output (Y) variables
 
 train_X = dataset.drop(columns=['Events'])
 
 #one-hot encode target column
-train_Y = to_categorical(dataset.Events)
+# train_Y = to_categorical(dataset.Events)
 
+#Non categorical data
+train_Y = dataset['Events'].values
 
 #get number of columns in training data
 n_cols = train_X.shape[1]
 
 
-
-# create model
-# model = Sequential()
+# split into 67% for train and 33% for test
+X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=0.33, random_state=seed)
 
 model_2 = Sequential()
 
-# add layers to model
-
-# model.add(Dense(12, input_dim=7, activation='relu'))
-#
-# model.add(Dense(10, activation='relu'))
-# model.add(Dense(10, activation='relu')) # extra layer
-# model.add(Dense(10, activation='relu')) # extra layer
-# model.add(Dense(10, activation='relu')) # extra layer
-# model.add(Dense(2, activation='sigmoid'))
-
 #add layers to model
-model_2.add(Dense(250, activation='relu', input_shape=(n_cols,)))
-model_2.add(Dense(250, activation='relu'))
-model_2.add(Dense(250, activation='relu'))
-model_2.add(Dense(2, activation='softmax'))
+model_2.add(Dense(512, activation='relu', input_shape=(n_cols,)))
+model_2.add(Dropout(0.2))
+model_2.add(Dense(512, activation='relu'))
+model_2.add(Dropout(0.2))
+model_2.add(Dense(1, activation='sigmoid'))
 
 # Compile model
-# model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model_2.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model_2.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
 #set early stopping monitor so the model stops training when it won't improve anymore
 early_stopping_monitor = EarlyStopping(patience=10)
 
 # Fit the model
-# history = model.fit(train_X,train_Y, batch_size=100, epochs=10)
 
-history = model_2.fit(train_X,train_Y, epochs=20, validation_split=0.2, callbacks=[early_stopping_monitor])
-
-# model_2.fit(train_X,train_Y, epochs=10, validation_split=0.2, callbacks=[early_stopping_monitor])
+history = model_2.fit(X_train,y_train,
+                      epochs=100,
+                      validation_split=0.3,
+                      batch_size=64,
+                      callbacks=[early_stopping_monitor])
 
 
 ## Plot the model
@@ -74,9 +69,6 @@ history = model_2.fit(train_X,train_Y, epochs=20, validation_split=0.2, callback
 
 
 
-# _, accuracy = model_2.evaluate(train_X,train_Y)
-# print('Accuracy: %.2f' % (accuracy*100))
-#
 # list all data in history
 print(history.history.keys())
 
