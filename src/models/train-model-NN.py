@@ -15,7 +15,7 @@ seed = 7
 np.random.seed(seed)
 
 # load  dataset
-dataset = pd.read_csv('/home_l/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8' ,index_col=0)
+dataset = pd.read_csv('/home/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8' ,index_col=0)
 
 # split into input (X) and output (Y) variables
 

@@ -103,7 +103,7 @@ def Input_Generator(df, input_data):
     This function generate an input from all the station for a multi-layer perceptron NN
     """
 
-    input_data = pd.concat([input_data, df[['x', 'error', 'n', 'n_error', 'u', 'u_error', 'Events']]])
+    input_data = pd.concat([input_data, df[['x', 'n', 'u',  'Events']]])
 
     return (input_data)
 
@@ -135,7 +135,7 @@ for i in stations_list:
     globals()['stationsU_{0}'.format(i)].columns = ['x', 'error']
 
 
-columns = [ 'x', 'error', 'n', 'n_error', 'u', 'u_error','Events']
+columns = [ 'x', 'n',  'u' ,'Events']
 input_data = pd.DataFrame(columns=columns)
 
 for i in stations_list:
@@ -160,5 +160,8 @@ for i in stations_list:
 
 # Create a CSV file output
 input_data = input_data.reset_index(drop=True)
+
 # input_data.to_csv('/home/francovm/Projects/SSE/data/processed/GISB.csv', sep='\t', encoding='utf-8',index=False)
+
+# Input data without errors
 input_data.to_csv('/home/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8',index=False)
