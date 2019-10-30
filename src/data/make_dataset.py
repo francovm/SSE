@@ -5,8 +5,8 @@ import datetime
 import numpy as np
 from sklearn import linear_model
 
-# stations_list = open("/home/francovm/Projects/SSE/data/external/GISB.txt").read().splitlines()
-stations_list = open("/home/francovm/Projects/SSE/data/external/hikurangi_gnss.txt").read().splitlines()
+stations_list = open("/home/francovm/Projects/SSE/data/external/MAHI.txt").read().splitlines()
+# stations_list = open("/home/francovm/Projects/SSE/data/external/hikurangi_gnss.txt").read().splitlines()
 
 def GNSS_dataframe(data):
     """
@@ -161,7 +161,7 @@ for i in stations_list:
 # Create a CSV file output
 input_data = input_data.reset_index(drop=True)
 
-# input_data.to_csv('/home/francovm/Projects/SSE/data/processed/GISB.csv', sep='\t', encoding='utf-8',index=False)
+input_data.to_csv('/home/francovm/Projects/SSE/data/processed/MAHI.csv', sep='\t', encoding='utf-8',index=False)
 
 # Input data without errors
-input_data.to_csv('/home/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8',index=False)
+# input_data.to_csv('/home/francovm/Projects/SSE/data/processed/input_data.csv', sep='\t', encoding='utf-8',index=False)
