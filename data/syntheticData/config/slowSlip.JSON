@@ -1,0 +1,29 @@
+{
+  "scenarioNameTag":"wc",
+  "interfaceModel" : "Mueller",
+  "coastalZoneNumber" : 30,
+  "trgProjection" : "EPSG:2193",
+  "interfaceModelFile" :"/home/cmu/workspace/hazards/trunk/hazardsapi/data/models/HikurangiKermadecTonga.obj",
+  "pathConfiguration": {
+    "workingDirectory": "/scratch/TS3/COMCOT-API_SLOW_SLIP/",
+    "demDatabase": "/scratch/TS3/COMCOT-API_ECAN_2019/DEM_BASE",
+    "template": "/scratch/TS3/COMCOT-API_ECAN_2019/2019-11-11_BASE"
+  },
+  "clusterConfiguration":{
+           "userName":"muellerc",
+           "sshCommand":" -v ",
+           "clusterAddress":"mahuika",
+           "clusterMountPoint":"/dev/sda1",
+           "projectAccount":"gns02472",
+           "clusterWorkingDirectory": "/nesi/nobackup/gns02472/COMCOT-API_SLOW_SLIP/",
+           "userEmailAddress":"c.mueller@gns.cri.nz",
+           "numberOfCores" :8,
+           "autoSync":"True",
+           "wallTimeStr":"336:00:00",
+           "wallTimeStr_":"5:00:00",
+           "queueName_":"large",
+           "queueName":"long",
+           "comcotBinary": "comcot_selwyn_mahuika_2019-11-11",
+           "memPerCpu": "2G"
+  }
+}
