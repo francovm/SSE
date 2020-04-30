@@ -28,11 +28,17 @@ for name in df["Mark"].values:
 
 #this needs to be replcaed witha propoer time series generator based on the list of z-values from above
 days = np.linspace(start=0, stop=19, num=20)
+
+
+def timingRule01(d):
+    return zMax/20*d
+
+
 for key in displacementData:
     zMax = displacementData[key]['zMax']
     zValues=[]
     for d in days:
-        z =zMax/20*d
+        z = timingRule01(d)
         zValues.append(z)
     displacementData[key]['timeSeries'] = zValues
 
