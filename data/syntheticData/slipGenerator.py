@@ -1,3 +1,5 @@
+from random import randint
+
 from CGPM_ProjectManagement import CGPM_Class
 from CGSIO_SimulationInputOutput import CGSIO_Class
 
@@ -20,18 +22,29 @@ def getNextScenarioObject(pm, scenarioWildCardList, excludeName, layerName):
 def timingRule01(d, zMax):
     return zMax/20*d
 
-def genTimeSeries(displacementData, scenarioName):
-    #this needs to be replcaed witha propoer time series generator based on the list of z-values from above
-    days=np.linspace(start=0,stop=19,num=20)
-    for key in displacementData[scenarioName]:
-        zMax=displacementData[scenarioName][key]['zMax']
-        zValues=[]
-        for d in days:
-            z=timingRule01(d,zMax)
-            zValues.append(z)
-        displacementData[scenarioName][key]['timeSeries']=zValues
+def genTimeSeries(displacementData):
 
-    return displacementData
+    timeSeriesData = {}
+
+    for scenario in displacementData:
+        for station in displacementData[scenario]:
+            timeSeriesData[station]=[0.0] #create a new entry with each station to hold time series as an empty list
+
+    for scenario in displacementData:
+        for station in displacementData[scenario]:
+            numberOfQuietDays=randint(100, 1000)
+            quietDays=np.linspace(start=0, stop=numberOfQuietDays, num=numberOfQuietDays)
+            lastVal = timeSeriesData[station][-1]
+            for d in quietDays:
+                timeSeriesData[station].append(lastVal)
+
+            zMax=displacementData[scenario][station]['zMax']
+            days=np.linspace(start=0, stop=randint(15, 25), num=20)
+            for d in days:
+                z=timingRule01(d,zMax) #add the last displacement entry to get absolute displacements
+                timeSeriesData[station].append(z+lastVal)
+
+    return timeSeriesData
 
 def runAll(pm, df):
     #this needs to loop and keep track of all Z values at the different locations
@@ -42,15 +55,14 @@ def runAll(pm, df):
                                                                                  layerName = 'ini_surface.dat')):
         print('working on scenario: {}'.format(scenarioName))
         displacementData[scenarioName] = {}
-        for name in df["Mark"].values:
-            displacementData[scenarioName][name] = {}
-            answer = df.loc[df['Mark'] == name][["Latitude", "Longitude"]]
-            displacementData[scenarioName][name]['lat'] = answer['Latitude'].values[0]
-            displacementData[scenarioName][name]['lon'] = answer['Longitude'].values[0]
-            displacementData[scenarioName][name]['zMax'] = scenarioObject.getLayerDataValue(answer['Longitude'].values[0],answer['Latitude'].values[0])
+        for station in df["Mark"].values:
+            displacementData[scenarioName][station] = {}
+            answer = df.loc[df['Mark'] == station][["Latitude", "Longitude"]]
+            displacementData[scenarioName][station]['lat'] = answer['Latitude'].values[0]
+            displacementData[scenarioName][station]['lon'] = answer['Longitude'].values[0]
+            displacementData[scenarioName][station]['zMax'] = scenarioObject.getLayerDataValue(answer['Longitude'].values[0],answer['Latitude'].values[0])
 
-        displacementData = genTimeSeries(displacementData,scenarioName)
-
+    return genTimeSeries(displacementData)
 
 if __name__ == '__main__':
     #replace this bit by site locations
@@ -59,6 +71,8 @@ if __name__ == '__main__':
     configFile='./config/slowSlip.JSON'
     pm=CGPM_Class(configFile=configFile,setup=False,doCluster=False,update=False)
 
-    runAll(pm, df)
+    timeSeriesData = runAll(pm, df)
 
-    pass
+    for station in timeSeriesData:
+        plt.plot(timeSeriesData[station])
+    plt.show()
