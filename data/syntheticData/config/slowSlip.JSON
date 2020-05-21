@@ -5,7 +5,7 @@
   "trgProjection" : "EPSG:2193",
   "interfaceModelFile" :"/home/cmu/workspace/hazards/trunk/hazardsapi/data/models/HikurangiKermadecTonga.obj",
   "pathConfiguration": {
-    "workingDirectory": "/scratch/TS3/COMCOT-API_SLOW_SLIP/",
+    "workingDirectory": "/scratch/PTHA/NAPIER/",
     "demDatabase": "/scratch/TS3/COMCOT-API_ECAN_2019/DEM_BASE",
     "template": "/scratch/TS3/COMCOT-API_ECAN_2019/2019-11-11_BASE"
   },
